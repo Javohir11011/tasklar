@@ -6,6 +6,7 @@ import { BycrptService } from './config/bycrpt/bycrpt.service';
 import { UserModule } from './user/user.module';
 import { CustomJwtModule } from './config/jwt/jwt.module';
 import { RolesModule } from './config/guards/roles.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { RolesModule } from './config/guards/roles.module';
     UserModule,
     CustomJwtModule,
     RolesModule,
+    TransactionModule,
   ],
   controllers: [],
   providers: [BycrptService],
