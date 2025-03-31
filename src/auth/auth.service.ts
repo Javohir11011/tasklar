@@ -9,12 +9,12 @@ import { BycrptService } from 'src/config/bycrpt/bycrpt.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { TokenService } from 'src/config/jwt/creatJwt.service';
 import { UserDto } from 'src/user/dto/create-user.dto';
-import { Auth } from './entities/auth.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel('User') private readonly authModel: Model<Auth>,
+    @InjectModel('User') private readonly authModel: Model<UserEntity>,
     private readonly bcryptService: BycrptService,
     private readonly jwtService: TokenService,
   ) {}

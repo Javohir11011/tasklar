@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
@@ -25,8 +26,9 @@ export class UserDto {
   @IsStrongPassword()
   password: string;
 
-  @IsNumber()
   @IsNotEmpty()
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
   balance: number;
 
   @IsEnum(Role)
