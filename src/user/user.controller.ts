@@ -19,11 +19,6 @@ import { Roles } from 'src/config/guards/role.deco';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: UserDto) {
-    return this.userService.create(createUserDto);
-  }
-
   @Roles(Role.Admin)
   @Get()
   findAll() {

@@ -7,16 +7,14 @@ import { UserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserEntity } from './entities/user.entity';
-import { Model } from 'mongoose';
+import { ClientSession, Model } from 'mongoose';
+import { TransactionDto } from 'src/transaction/dto/create-transaction.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<UserEntity>,
   ) {}
-  create(createUserDto: UserDto) {
-    
-  }
 
   async findAll() {
     return await this.userModel.find();
