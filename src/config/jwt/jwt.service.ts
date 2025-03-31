@@ -1,33 +1,31 @@
 import {
+  CanActivate,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { PUBLIC_KEY } from './public.decorator';
 import { Request } from 'express';
+import { PUBLIC_KEY } from './public.decorator';
 
 @Injectable()
-export class CustomJwtService {
+export class CustomJwtService implements CanActivate {
   constructor(
-    private readonly jwtService: JwtService,
-    private readonly reflector: Reflector,
+    private jwtService: JwtService,
+    private reflector: Reflector,
   ) {}
 
-  async canActive(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
-
-    if (PUBLIC_KEY) {
+    if (isPublic) {
       return true;
     }
-
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -36,9 +34,10 @@ export class CustomJwtService {
         secret: process.env.ACCESS_SECRET,
       });
       request.user = payload;
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException();
     }
+    return true;
   }
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];

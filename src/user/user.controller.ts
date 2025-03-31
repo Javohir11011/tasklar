@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserID } from 'src/config/userID';
+import { Role } from 'src/config/role/role';
+import { Roles } from 'src/config/guards/role.deco';
 
 @Controller('user')
 export class UserController {
@@ -20,23 +24,28 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Roles(Role.Admin)
   @Get()
   findAll() {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @Get('/me/balance')
+  findOne(@UserID() id: string) {
+    return this.userService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Patch('/me/deposit')
+  update(
+    @Param('id') @UserID() id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Roles(Role.Admin)
+  @Delete('delete/:id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }
